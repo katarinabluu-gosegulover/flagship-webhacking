@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07110f" />
+    <title>로그인 — FLAGSHIP</title>
+    <link rel="stylesheet" href="auth.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <main class="auth-page">
+      <section class="auth-story">
+        <a class="brand" href="login.html">
+          <span class="brand-mark">F<span>_</span></span>
+          <span><strong>FLAGSHIP</strong><small>WEB SECURITY LAB</small></span>
+        </a>
+        <div class="auth-copy">
+          <span class="eyebrow">AUTHORIZED MEMBERS ONLY</span>
+          <h1>Learn.<br />Break.<br /><em>Defend.</em></h1>
+          <p>웹의 동작 원리를 배우고, 허가된 환경에서 취약점을 분석하며, 더 안전한 서비스를 만드는 동아리 학습 공간입니다.</p>
+        </div>
+        <p class="security-note">SECURITY POLICY 01 — 모든 실습은 명시적으로 허가된 환경에서만 진행합니다.</p>
+      </section>
+      <section class="auth-panel">
+        <div class="auth-card">
+          <span class="eyebrow">MEMBER ACCESS</span>
+          <h2 id="authTitle">다시 만나서 반가워요.</h2>
+          <p id="authDesc">등록한 이메일과 비밀번호로 로그인하세요.</p>
+          <div id="configWarning" class="config-warning" hidden>아직 Supabase 연결 정보가 없습니다. <code>config.js</code>에 프로젝트 URL과 publishable key를 입력하세요.</div>
+          <div class="auth-tabs">
+            <button class="active" type="button" data-mode="login">로그인</button>
+            <button type="button" data-mode="signup">가입 신청</button>
+          </div>
+          <form id="authForm">
+            <div class="field" id="nameField" hidden><label for="displayName">이름</label><input id="displayName" autocomplete="name" placeholder="동아리에서 사용할 이름" /></div>
+            <div class="field"><label for="email">이메일</label><input id="email" type="email" autocomplete="email" required placeholder="member@example.com" /></div>
+            <div class="field"><label for="password">비밀번호</label><input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="8자 이상 입력" /></div>
+            <button class="primary-btn" id="authSubmit" type="submit">로그인 →</button>
+            <p class="auth-message" id="authMessage" role="status"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="backend.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>

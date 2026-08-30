@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07110f" />
+    <meta name="description" content="웹해킹 동아리 커리큘럼, 과제 제출, 피드백과 자료 공유를 한곳에서 관리하는 학습 플랫폼" />
+    <title>FLAGSHIP — Web Security Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#dashboard" aria-label="FLAGSHIP 홈"><span class="brand-mark">F<span>_</span></span><span><strong>FLAGSHIP</strong><small>WEB SECURITY LAB</small></span></a>
+        <nav class="main-nav" aria-label="주 메뉴">
+          <p class="nav-label">LEARNING</p>
+          <a href="#dashboard" data-route="dashboard"><span class="nav-icon">⌁</span>대시보드</a>
+          <a href="#curriculum" data-route="curriculum"><span class="nav-icon">⌘</span>커리큘럼</a>
+          <a href="#assignments" data-route="assignments"><span class="nav-icon">✓</span>과제</a>
+          <a href="#resources" data-route="resources"><span class="nav-icon">▤</span>자료실</a>
+          <div id="adminNavigation" hidden><p class="nav-label">MANAGEMENT</p><a href="admin.html"><span class="nav-icon">◎</span>관리자 패널</a></div>
+        </nav>
+        <div class="sidebar-card"><div class="radar"><i></i><i></i><span></span></div><p>LAB STATUS</p><strong><b></b> Secure workspace</strong><small id="connectionState">서버 연결 확인 중</small></div>
+        <div class="profile-mini"><div class="avatar" id="profileAvatar">F</div><div><strong id="profileName">멤버</strong><small id="profileRole">AUTH CHECKING</small></div><button id="signOutButton" aria-label="로그아웃" title="로그아웃">↪</button></div>
+      </aside>
+      <main class="main-area">
+        <header class="topbar">
+          <button class="menu-button" id="menuButton" aria-label="메뉴 열기">☰</button>
+          <div class="breadcrumb"><span>FLAGSHIP</span><i>/</i><strong id="pageCrumb">DASHBOARD</strong></div>
+          <div class="top-actions"><a class="icon-button admin-shortcut" id="adminShortcut" href="admin.html" title="관리자 패널" hidden>⚙</a><button class="notification" aria-label="알림"><span>3</span>♢</button><div class="live-pill"><i></i> 2026 WEB HACKING</div></div>
+        </header>
+        <section id="app" class="content" aria-live="polite"><div class="empty">학습 공간을 불러오는 중입니다…</div></section>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="modal-backdrop" id="modalBackdrop" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="modalClose" aria-label="닫기">×</button><div id="modalContent"></div></div></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="backend.js"></script>
+    <script src="app-v2.js"></script>
+  </body>
+</html>

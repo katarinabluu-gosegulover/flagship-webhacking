@@ -1,0 +1,7 @@
+# Supabase publishable configuration is intentionally deployed with this
+# browser-only static site. Never place secret/service-role keys in config.js.
+
+# Local editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/

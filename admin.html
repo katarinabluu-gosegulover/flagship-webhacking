@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07110f" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>관리자 패널 — FLAGSHIP</title>
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="admin-shell">
+      <aside class="admin-sidebar" id="adminSidebar">
+        <a class="brand" href="#overview"><span class="brand-mark">F<span>_</span></span><span><strong>FLAGSHIP</strong><small>WEB SECURITY LAB</small></span><b class="admin-badge">ADMIN</b></a>
+        <p class="nav-label">CONTROL CENTER</p>
+        <nav class="admin-nav">
+          <button class="active" data-admin-route="overview"><span>⌁</span>운영 현황</button>
+          <button data-admin-route="submissions"><span>✓</span>제출 검사</button>
+          <button data-admin-route="curriculum"><span>◇</span>커리큘럼 관리</button>
+          <button data-admin-route="assignments"><span>⌘</span>과제 관리</button>
+          <button data-admin-route="resources"><span>▤</span>자료 관리</button>
+          <button data-admin-route="members"><span>◎</span>멤버 관리</button>
+        </nav>
+        <div class="admin-sidebar-foot">
+          <div class="admin-identity"><strong id="adminName">관리자</strong><small id="adminEmail">AUTH CHECKING</small></div>
+          <a class="secondary-btn" href="index.html">학생 화면 보기</a>
+          <button class="secondary-btn" id="adminSignOut">로그아웃</button>
+        </div>
+      </aside>
+      <main class="admin-main">
+        <header class="admin-topbar">
+          <button class="menu-button admin-menu" id="adminMenu" aria-label="메뉴 열기">☰</button>
+          <strong>FLAGSHIP / <span id="adminCrumb">OVERVIEW</span></strong>
+          <div><small>DATABASE CONNECTED</small><span class="live-pill"><i></i> SECURE SESSION</span></div>
+        </header>
+        <section class="admin-content" id="adminApp"><div class="loading-screen"><span>AUTHORIZING</span></div></section>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="modal-backdrop" id="modalBackdrop" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><button class="modal-close" id="modalClose" aria-label="닫기">×</button><div id="modalContent"></div></div></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="backend.js"></script>
+    <script src="activity-model.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>
