@@ -2,6 +2,8 @@
 
 웹해킹 동아리용 커리큘럼·과제·자료·채점 플랫폼입니다. 학생 화면과 별도의 관리자 패널을 제공하며 Supabase Auth, PostgreSQL, private Storage를 사용합니다.
 
+공개 사이트: https://katarinabluu-gosegulover.github.io/flagship-webhacking/
+
 ## 제공 기능
 
 ### 교육생

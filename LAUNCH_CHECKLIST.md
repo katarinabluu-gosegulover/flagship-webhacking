@@ -1,12 +1,14 @@
 # FLAGSHIP 개강 체크리스트 — 2026-08-31
 
+공개 사이트: https://katarinabluu-gosegulover.github.io/flagship-webhacking/
+
 ## 필수 완료
 
-- [ ] `supabase/launch-2026-08-31.sql`을 Supabase SQL Editor에서 실행한다.
-- [ ] 검증 결과가 8행이고, `A-01`만 `is_published = true`인지 확인한다.
-- [ ] 공개 사이트를 배포하고 HTTPS 주소를 확보한다.
-- [ ] Supabase Dashboard → Authentication → URL Configuration에서 Site URL을 공개 사이트 주소로 변경한다.
-- [ ] Redirect URLs에 `공개 사이트 주소/**`와 `http://localhost:8000/**`를 등록한다.
+- [x] `supabase/launch-2026-08-31.sql`을 Supabase SQL Editor에서 실행한다.
+- [x] 검증 결과가 8행이고, `A-01`만 `is_published = true`인지 확인한다.
+- [x] 공개 사이트를 배포하고 HTTPS 주소를 확보한다.
+- [x] Supabase Dashboard → Authentication → URL Configuration에서 Site URL을 공개 사이트 주소로 변경한다.
+- [x] Redirect URLs에 `공개 사이트 주소/**`와 `http://localhost:8000/**`를 등록한다.
 - [ ] 학생 계정 생성 방식을 결정한다.
 - [ ] 학생 계정으로 가입, 로그인, A-01 제출, 관리자 다운로드까지 한 번 끝까지 시험한다.
 

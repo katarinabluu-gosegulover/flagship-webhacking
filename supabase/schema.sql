@@ -100,6 +100,14 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
+-- Backfill profiles for accounts that existed before the trigger was installed.
+insert into public.profiles (id, display_name)
+select
+  id,
+  left(coalesce(nullif(raw_user_meta_data ->> 'display_name', ''), split_part(email, '@', 1), '새 멤버'), 40)
+from auth.users
+on conflict (id) do nothing;
+
 create or replace function public.is_admin()
 returns boolean
 language sql
