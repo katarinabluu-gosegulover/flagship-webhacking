@@ -52,6 +52,9 @@ const fs = require('fs');
   if (!studentHtml.includes('notification-state.js') || !studentScript.includes('notificationState.markRead') || !notificationScript.includes('storagePrefix')) {
     throw new Error('사용자별 알림 읽음 처리 기능이 연결되지 않았습니다.');
   }
+  if (!studentScript.includes('data-read-notification') || !studentScript.includes('data-read-all') || !studentScript.includes('bindNotificationActions')) {
+    throw new Error('개별 읽음 또는 모두 읽음 동작이 연결되지 않았습니다.');
+  }
   if (!pagesWorkflow.includes('notification-state.js')) {
     throw new Error('GitHub Pages 배포 파일에 알림 읽음 처리 모듈이 포함되지 않았습니다.');
   }

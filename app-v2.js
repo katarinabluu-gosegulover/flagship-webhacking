@@ -86,7 +86,32 @@
   function showWeek(id) { const item = curriculum.find((entry) => entry.id === id); openModal(`<span class="eyebrow">WEEK ${String(item.week_number).padStart(2,'0')} / ${item.level}</span><h2 id="modalTitle">${esc(item.title)}</h2><p class="modal-desc">${esc(item.description)}</p><div class="notice-item hot"><strong>이번 주 학습 목표</strong><p>${(item.tags || []).map(esc).join(', ')}의 원리를 이해하고 허가된 실습 환경에서 재현합니다.</p><small>ESTIMATED · ${item.duration_minutes}분</small></div><div class="modal-actions"><button class="primary-btn" data-close>확인</button></div>`); document.querySelector('[data-close]').addEventListener('click', closeModal); }
   function submissionModal(id) { const item = assignments.find((entry) => entry.id === id); openModal(`<span class="eyebrow">SECURE SUBMISSION</span><h2 id="modalTitle">${esc(item.title)}</h2><p class="modal-desc">${esc(item.description)}<br>마감 ${date(item.due_at)}</p><form id="submissionForm"><div class="field"><label>제출 파일</label><div class="file-drop"><input name="file" type="file" required accept=".pdf,.md,.txt,.zip" /><p class="modal-desc">PDF, MD, TXT, ZIP · 최대 20MB</p></div></div><div class="field"><label>메모</label><textarea name="memo" placeholder="검사할 때 참고할 내용을 적어주세요."></textarea></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close>취소</button><button class="primary-btn">제출 완료</button></div></form>`); document.querySelector('[data-close]').addEventListener('click', closeModal); document.querySelector('#submissionForm').addEventListener('submit', async (event) => { event.preventDefault(); const fd = new FormData(event.target); const button = event.target.querySelector('.primary-btn'); button.disabled = true; button.textContent = '업로드 중...'; try { await backend.submitAssignment({ assignmentId: id, userId: auth.user.id, file: fd.get('file'), memo: fd.get('memo').trim() }); submissions = await backend.listMySubmissions(auth.user.id); closeModal(); render(); toast('과제가 안전하게 제출되었습니다.'); } catch (error) { toast(error.message, true); button.disabled = false; button.textContent = '제출 완료'; } }); }
   function feedbackModal(id) { const submission = submissions.find((item) => item.id === id); const review = submission.reviews?.[0]; openModal(`<span class="eyebrow">INSTRUCTOR FEEDBACK</span><h2 id="modalTitle">${review?.score ?? '-'}점</h2><p class="modal-desc">${esc(review?.feedback || '등록된 피드백이 없습니다.')}</p><div class="modal-actions"><button class="primary-btn" data-close>확인</button></div>`); document.querySelector('[data-close]').addEventListener('click', closeModal); }
-  function notificationModal() { const pending = pendingAssignments(); notificationState.markRead(pending, localStorage, auth?.user?.id); updateNotificationCount(); openModal(`<span class="eyebrow">NOTIFICATION CENTER</span><h2 id="modalTitle">알림</h2><p class="modal-desc">공개된 과제와 중요한 운영 안내를 확인하세요.</p><div class="notice-list">${pending.map((item) => `<div class="notice-item hot"><strong>${esc(item.code)} ${esc(item.title)}</strong><p>아직 제출하지 않은 과제입니다.</p><small>DEADLINE · ${date(item.due_at)}</small></div>`).join('') || '<div class="notice-item"><strong>새 과제 알림이 없습니다.</strong><p>현재 공개된 과제를 모두 제출했습니다.</p><small>STATUS · ALL CLEAR</small></div>'}<div class="notice-item"><strong>허가된 환경에서만 실습하세요.</strong><p>Dreamhack Lab 또는 동아리가 명시적으로 허가한 격리 환경만 사용합니다.</p><small>SECURITY POLICY · ALWAYS ACTIVE</small></div></div><div class="modal-actions"><button class="primary-btn" data-close>확인</button></div>`); document.querySelector('[data-close]').addEventListener('click', closeModal); }
+  function notificationMarkup() {
+    const pending = pendingAssignments();
+    const unreadIds = new Set(unreadAssignments().map((item) => String(item.id)));
+    const items = pending.map((item) => {
+      const isUnread = unreadIds.has(String(item.id));
+      return `<div class="notice-item ${isUnread ? 'hot' : ''}"><strong>${esc(item.code)} ${esc(item.title)}</strong><p>아직 제출하지 않은 과제입니다.</p><div class="notification-item-foot"><small>DEADLINE · ${date(item.due_at)}</small>${isUnread ? `<button class="small-btn" type="button" data-read-notification="${esc(item.id)}">읽음</button>` : '<span class="notification-read">읽음 완료</span>'}</div></div>`;
+    }).join('') || '<div class="notice-item"><strong>과제 알림이 없습니다.</strong><p>현재 공개된 미제출 과제가 없습니다.</p><small>STATUS · ALL CLEAR</small></div>';
+    return `<span class="eyebrow">NOTIFICATION CENTER</span><div class="notification-toolbar"><h2 id="modalTitle">알림</h2><button class="small-btn" type="button" data-read-all ${unreadIds.size ? '' : 'disabled'}>모두 읽음</button></div><p class="modal-desc">공개된 과제와 중요한 운영 안내를 확인하세요.</p><div class="notice-list">${items}<div class="notice-item"><strong>허가된 환경에서만 실습하세요.</strong><p>Dreamhack Lab 또는 동아리가 명시적으로 허가한 격리 환경만 사용합니다.</p><small>SECURITY POLICY · ALWAYS ACTIVE</small></div></div><div class="modal-actions"><button class="primary-btn" data-close>확인</button></div>`;
+  }
+  function bindNotificationActions() {
+    modalContent.querySelectorAll('[data-read-notification]').forEach((button) => button.addEventListener('click', () => {
+      const item = pendingAssignments().find((entry) => String(entry.id) === button.dataset.readNotification);
+      if (item) notificationState.markRead([item], localStorage, auth?.user?.id);
+      updateNotificationCount();
+      modalContent.innerHTML = notificationMarkup();
+      bindNotificationActions();
+    }));
+    modalContent.querySelector('[data-read-all]')?.addEventListener('click', () => {
+      notificationState.markRead(pendingAssignments(), localStorage, auth?.user?.id);
+      updateNotificationCount();
+      modalContent.innerHTML = notificationMarkup();
+      bindNotificationActions();
+    });
+    modalContent.querySelector('[data-close]').addEventListener('click', closeModal);
+  }
+  function notificationModal() { openModal(notificationMarkup()); bindNotificationActions(); }
   async function openResource(id) { const item = resources.find((entry) => entry.id === id); try { if (item.external_url) return window.open(item.external_url, '_blank', 'noopener'); const url = await backend.createSignedUrl('resources', item.file_path); window.open(url, '_blank', 'noopener'); } catch (error) { toast(error.message, true); } }
 
   window.addEventListener('hashchange', render);
