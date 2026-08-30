@@ -1,37 +1,37 @@
 -- FLAGSHIP 2026-08-31 launch curriculum
 -- Run once in Supabase Dashboard > SQL Editor before opening the course.
 -- Idempotent: rerunning updates the eight curriculum weeks and assignments.
--- Source path: Dreamhack Web Hacking Basics - Deep Dive.
+-- Source path: https://dreamhack.io/lecture/paths/web-hacking-advanced
 
 begin;
 
 insert into public.curriculum_weeks
   (week_number, title, description, level, tags, duration_minutes, status)
 values
-  (1, 'XSS Filtering Bypass',
-   '2026-08-31 수업. Dreamhack 심화 Path의 XSS 필터링 동작과 탐지 한계를 학습하고 허가된 Lab에서 결과를 기록합니다.',
-   'CORE', array['XSS', 'Filter', 'JavaScript'], 210, 'active'),
-  (2, 'Content Security Policy (CSP)',
-   '2026-09-07 수업. CSP 정책 평가 방식과 잘못된 설정에서 생기는 위험을 분석하고 안전한 정책 작성 원칙을 학습합니다.',
-   'CORE', array['CSP', 'XSS', 'Policy'], 210, 'locked'),
-  (3, 'CSRF/CORS Bypass',
-   '2026-09-14 수업. CSRF 토큰 검증과 CORS 정책의 동작 원리를 살펴보고 구성 오류를 방어 관점에서 분석합니다.',
-   'CORE', array['CSRF', 'CORS', 'postMessage'], 210, 'locked'),
-  (4, 'Command Injection Advanced',
-   '2026-09-21 수업. 운영체제별 명령 실행 경계와 입력 검증의 한계를 허가된 실습 환경에서 분석합니다.',
-   'ADVANCED', array['Command Injection', 'Linux', 'Windows'], 240, 'locked'),
-  (5, 'File Vulnerability Advanced',
-   '2026-09-28 수업. 운영체제별 파일 업로드·다운로드 검증과 서버 설정에서 발생하는 위험을 분석합니다.',
-   'ADVANCED', array['File Upload', 'File Download', 'Path'], 240, 'locked'),
-  (6, 'SQL Injection Advanced',
-   '2026-10-05 수업. Blind, Error, Time 기반 SQL Injection과 WAF 탐지 한계를 허가된 Lab에서 분석합니다.',
-   'ADVANCED', array['SQLi', 'Blind', 'WAF'], 270, 'locked'),
-  (7, 'SQL Injection Fingerprinting',
-   '2026-10-12 수업. 시스템 테이블과 DBMS별 응답 차이를 이용한 식별 원리를 방어 관점과 함께 학습합니다.',
-   'ADVANCED', array['SQLi', 'DBMS', 'Fingerprinting'], 180, 'locked'),
-  (8, 'NoSQL Injection Advanced',
-   '2026-10-19 수업. CouchDB, MongoDB, Redis의 질의 처리 차이와 Injection 방어 원칙을 비교합니다.',
-   'ADVANCED', array['NoSQL', 'MongoDB', 'Redis'], 270, 'locked')
+  (1, 'Client-Side Template Injection (CSTI)',
+   '2026-08-31 수업. 프론트엔드 템플릿의 신뢰 경계를 이해하고 CSTI가 XSS로 이어지는 흐름과 안전한 렌더링 원칙을 분석합니다.',
+   'ADVANCED', array['CSTI', 'XSS', 'Template'], 120, 'active'),
+  (2, 'XS-Search',
+   '2026-09-07 수업. 브라우저의 SOP와 교차 출처 부채널을 이해하고 XS-Search의 정보 노출 조건과 완화 방법을 학습합니다.',
+   'ADVANCED', array['XS-Search', 'SOP', 'Side Channel'], 120, 'locked'),
+  (3, 'CSS Injection',
+   '2026-09-14 수업. CSS 주입으로 발생하는 UI 변조와 정보 노출 경로를 허가된 Lab에서 관찰하고 방어 원칙을 정리합니다.',
+   'ADVANCED', array['CSS Injection', 'UI Redress', 'Exfiltration'], 90, 'locked'),
+  (4, 'DOM Vulnerability',
+   '2026-09-21 수업. DOM Clobbering과 DOM XSS의 데이터 흐름을 분석하고 안전한 DOM API 사용과 이름 충돌 방지를 학습합니다.',
+   'ADVANCED', array['DOM', 'DOM Clobbering', 'DOM XSS'], 90, 'locked'),
+  (5, 'Relative Path Overwrite (RPO)',
+   '2026-09-28 수업. 상대 경로 해석과 브라우저·서버 간 URL 처리 차이가 RPO로 이어지는 원리를 분석합니다.',
+   'ADVANCED', array['RPO', 'Relative Path', 'URL'], 90, 'locked'),
+  (6, 'RPO Advanced Practice',
+   '2026-10-05 수업. Dreamhack RPO 실습과 심화 문제를 바탕으로 재현 조건, 영향 범위, 방어 체크리스트를 완성합니다.',
+   'ADVANCED', array['RPO', 'Lab', 'Mitigation'], 90, 'locked'),
+  (7, 'Web Cache Poisoning',
+   '2026-10-12 수업. 캐시 키와 비키 입력의 차이를 이해하고 Web Cache Poisoning의 발생 조건과 캐시 정책 개선안을 분석합니다.',
+   'ADVANCED', array['Web Cache', 'Cache Poisoning', 'Cache Key'], 135, 'locked'),
+  (8, 'Web Cache Deception',
+   '2026-10-19 수업. 경로 해석과 캐시 규칙의 불일치로 개인화 응답이 저장되는 조건을 분석하고 안전한 캐싱 정책을 설계합니다.',
+   'ADVANCED', array['Web Cache', 'Cache Deception', 'Path'], 135, 'locked')
 on conflict (week_number) do update set
   title = excluded.title,
   description = excluded.description,
@@ -51,29 +51,29 @@ select
   100,
   schedule.is_published
 from (values
-  ('A-01', 1, 'XSS 필터 동작 분석 보고서',
-   'Dreamhack의 해당 Unit과 허가된 Lab을 학습하고 필터 규칙, 관찰 결과, 안전한 출력 처리 개선안을 PDF 또는 Markdown으로 제출하세요. 공격 문자열 자체보다 원인과 방어 설명을 중심으로 작성합니다.',
+  ('A-01', 1, 'CSTI 신뢰 경계 분석 보고서',
+   'Dreamhack CSTI Unit을 학습하고 템플릿 입력부터 DOM 출력까지의 데이터 흐름, 위험한 신뢰 가정, 안전한 렌더링 개선안을 PDF 또는 Markdown으로 제출하세요.',
    timestamptz '2026-09-06 23:59:00+09', true),
-  ('A-02', 2, 'CSP 정책 리뷰',
-   '제공된 CSP 사례의 지시어와 리소스 허용 범위를 표로 정리하고 과도한 허용 규칙을 줄인 개선 정책을 제안하세요.',
+  ('A-02', 2, 'XS-Search 부채널 분석',
+   'SOP가 보호하는 경계와 XS-Search가 관찰하는 신호를 구분하고 정보 노출 조건, 영향, 완화 방안을 도식화하세요.',
    timestamptz '2026-09-13 23:59:00+09', false),
-  ('A-03', 3, 'CSRF/CORS 신뢰 경계 분석',
-   '허가된 실습 사례에서 요청 주체, Origin 검증, 자격 증명 전달, 토큰 검증 흐름을 그리고 구성상의 문제와 개선안을 제출하세요.',
+  ('A-03', 3, 'CSS Injection 방어 리뷰',
+   '허가된 Lab에서 관찰한 UI 변조와 정보 노출 흐름을 정리하고 스타일 입력 제한, DOM 격리, 보안 정책 개선안을 제안하세요.',
    timestamptz '2026-09-20 23:59:00+09', false),
-  ('A-04', 4, 'Command Injection 방어 설계',
-   '허가된 Lab의 입력부터 명령 실행 지점까지 데이터 흐름을 추적하고 셸 호출 제거, 허용 목록, 권한 분리 개선안을 작성하세요.',
+  ('A-04', 4, 'DOM 취약점 데이터 흐름 분석',
+   'DOM Clobbering 또는 DOM XSS 사례의 source와 sink, 이름 충돌 지점, 안전한 DOM API 및 검증 방안을 정리하세요.',
    timestamptz '2026-09-27 23:59:00+09', false),
-  ('A-05', 5, '파일 처리 위협 모델',
-   '파일 업로드·다운로드 흐름의 신뢰 경계를 만들고 파일명, 경로, MIME, 실행 권한, 웹 루트 분리 점검표를 제출하세요.',
+  ('A-05', 5, 'RPO 발생 조건 분석',
+   '상대 경로, base URL, 콘텐츠 타입, 라우팅 규칙이 RPO에 미치는 영향을 표로 정리하고 재현 조건과 방어책을 제출하세요.',
    timestamptz '2026-10-04 23:59:00+09', false),
-  ('A-06', 6, 'Advanced SQLi Lab Write-up',
-   'Dreamhack의 허가된 Lab에서 관찰한 Blind·Error·Time 기반 차이를 비교하고 파라미터 바인딩과 WAF 의존 최소화 방안을 작성하세요.',
+  ('A-06', 6, 'RPO Advanced Lab Write-up',
+   'Dreamhack의 허가된 RPO 실습과 심화 문제에서 관찰한 요청·응답 흐름, 영향 범위, 서버와 브라우저 측 완화 방안을 작성하세요.',
    timestamptz '2026-10-11 23:59:00+09', false),
-  ('A-07', 7, 'DBMS Fingerprinting 비교표',
-   '과정에서 다룬 DBMS 식별 단서를 비교표로 정리하고 오류 정보 최소화, 계정 권한 분리 등 방어 방안을 작성하세요.',
+  ('A-07', 7, 'Web Cache Poisoning 위협 모델',
+   '캐시 키에 포함되는 입력과 제외되는 입력을 구분하고 중독 조건, 사용자 영향, 캐시 정책 및 응답 헤더 개선안을 제출하세요.',
    timestamptz '2026-10-18 23:59:00+09', false),
-  ('A-08', 8, 'NoSQL Injection 방어 비교',
-   'CouchDB, MongoDB, Redis 중 두 가지를 선택해 질의 구조와 위험한 입력 처리의 차이, 스키마 검증 및 권한 분리 방안을 제출하세요.',
+  ('A-08', 8, 'Web Cache Deception 방어 설계',
+   '동적·정적 경로 판정과 캐시 규칙의 불일치를 분석하고 개인화 응답 캐싱을 막는 경로·헤더·CDN 설정 체크리스트를 작성하세요.',
    timestamptz '2026-10-25 23:59:00+09', false)
 ) as schedule(code, week_number, title, description, due_at, is_published)
 join public.curriculum_weeks week on week.week_number = schedule.week_number

@@ -4,6 +4,8 @@
   const sidebar = document.querySelector('#sidebar');
   const modal = document.querySelector('#modalBackdrop');
   const modalContent = document.querySelector('#modalContent');
+  const notificationButton = document.querySelector('#notificationButton');
+  const notificationCount = document.querySelector('#notificationCount');
   let auth = null;
   let curriculum = [];
   let assignments = [];
@@ -19,6 +21,8 @@
   function closeModal() { modal.hidden = true; document.body.style.overflow = ''; }
   function head(kicker, title, desc, actions = '') { return `<div class="page-head"><div><span class="eyebrow">${kicker}</span><h1>${title}</h1><p>${desc}</p></div>${actions ? `<div class="head-actions">${actions}</div>` : ''}</div>`; }
   function submissionFor(id) { return submissions.find((item) => item.assignment_id === id); }
+  function pendingAssignments() { return assignments.filter((item) => !submissionFor(item.id)); }
+  function updateNotificationCount() { const count = pendingAssignments().length; notificationCount.textContent = String(count); notificationCount.hidden = count === 0; notificationButton.setAttribute('aria-label', count ? `알림 보기, 미제출 과제 ${count}개` : '알림 보기, 새 알림 없음'); }
 
   function dashboard() {
     const completed = submissions.length;
@@ -33,7 +37,7 @@
         ${stat('학습 달성률', `${progress}%`, '완료 주차 기준', 'ON TRACK')}
       </div>
       <div class="dashboard-grid">
-        <section class="panel"><div class="panel-head"><div><span class="panel-kicker">CURRENT TRACK</span><h2>커리큘럼 진행 상황</h2><p>${curriculum.length}주 과정 · Web Security Foundation</p></div><button class="small-btn" data-go="curriculum">전체 보기</button></div><div class="week-list">${curriculum.map(weekRow).join('') || '<div class="empty">등록된 커리큘럼이 없습니다.</div>'}</div></section>
+        <section class="panel"><div class="panel-head"><div><span class="panel-kicker">CURRENT TRACK</span><h2>커리큘럼 진행 상황</h2><p>${curriculum.length}주 과정 · Dreamhack Web Hacking Advanced</p></div><button class="small-btn" data-go="curriculum">전체 보기</button></div><div class="week-list">${curriculum.map(weekRow).join('') || '<div class="empty">등록된 커리큘럼이 없습니다.</div>'}</div></section>
         <section class="panel"><div class="panel-head"><div><span class="panel-kicker">YOUR PROGRESS</span><h2>나의 학습 리포트</h2></div><span class="status now">LIVE</span></div><div class="progress-ring" style="--p:${progress}"><span>${progress}%<small>COMPLETION</small></span></div><div class="metric-lines">${metric('커리큘럼', progress)}${metric('과제 제출률', assignments.length ? Math.round(completed / assignments.length * 100) : 0)}${metric('피드백 확인', completed ? Math.round(graded.length / completed * 100) : 0)}</div></section>
         <section class="panel"><div class="panel-head"><div><span class="panel-kicker">UP NEXT</span><h2>다가오는 과제</h2></div></div><div class="notice-list">${assignments.filter((item) => !submissionFor(item.id)).slice(0, 2).map((item) => `<div class="notice-item hot"><strong>${esc(item.code)} ${esc(item.title)}</strong><p>${esc(item.description)}</p><small>DEADLINE · ${date(item.due_at)}</small></div>`).join('') || '<div class="empty">미제출 과제가 없습니다.</div>'}</div></section>
         <section class="panel"><div class="panel-head"><div><span class="panel-kicker">SECURITY NOTICE</span><h2>실습 안전 원칙</h2></div></div><div class="notice-item hot"><strong>허가된 환경에서만 실습하세요.</strong><p>모든 공격 실습은 동아리가 제공한 격리 랩 또는 명시적으로 허가받은 환경에서만 진행합니다.</p><small>POLICY · ALWAYS ACTIVE</small></div></section>
@@ -45,7 +49,7 @@
   function weekRow(item) { const label = item.status === 'done' ? 'COMPLETE' : item.status === 'active' ? 'IN PROGRESS' : 'LOCKED'; const cls = item.status === 'active' ? 'active' : item.status === 'done' ? 'done' : ''; const status = item.status === 'active' ? 'now' : item.status === 'done' ? 'done' : 'lock'; return `<div class="week-row ${cls}"><span class="week-num">${String(item.week_number).padStart(2,'0')}</span><div><strong>${esc(item.title)}</strong><small>${(item.tags || []).map(esc).join(' · ')}</small></div><span class="status ${status}">${label}</span></div>`; }
 
   function curriculumView() {
-    return `${head('TRAINING PATH', 'Web Hacking Curriculum', '기초 원리부터 서버 측 취약점까지, 이론과 안전한 랩 실습으로 완성합니다.')}
+    return `${head('TRAINING PATH', 'Web Hacking Advanced', 'CSTI부터 XS-Search, DOM, RPO, Web Cache까지 Dreamhack 심화 Path를 8주 동안 학습합니다.', '<a class="secondary-btn" href="https://dreamhack.io/lecture/paths/web-hacking-advanced" target="_blank" rel="noopener noreferrer">Dreamhack Path ↗</a>')}
       <div class="toolbar"><div class="search"><input id="curriculumSearch" placeholder="주제 또는 키워드 검색" /></div><select id="levelFilter"><option value="all">전체 난이도</option><option>BASIC</option><option>CORE</option><option>ADVANCED</option></select></div>
       <div class="curriculum-grid" id="curriculumGrid">${curriculum.map((item) => `<article class="curriculum-card" data-week="${String(item.week_number).padStart(2,'0')}" data-level="${item.level}" data-search="${esc(`${item.title} ${item.description} ${(item.tags || []).join(' ')}`.toLowerCase())}"><div class="card-meta"><span class="week-badge">WEEK ${String(item.week_number).padStart(2,'0')}</span><span class="difficulty">${item.level}</span></div><h3>${esc(item.title)}</h3><p>${esc(item.description)}</p><div class="tags">${(item.tags || []).map((tag) => `<span class="tag">${esc(tag)}</span>`).join('')}</div><div class="card-foot"><span>예상 학습 ${item.duration_minutes}분</span><button data-week-id="${item.id}" ${item.status === 'locked' ? 'disabled' : ''}>${item.status === 'done' ? '학습 완료 ✓' : item.status === 'active' ? '수업 열기 →' : '선행 학습 필요'}</button></div></article>`).join('')}</div>`;
   }
@@ -64,7 +68,7 @@
   }
 
   const views = { dashboard, curriculum: curriculumView, assignments: assignmentsView, resources: resourcesView };
-  function render() { const requested = location.hash.slice(1) || 'dashboard'; const route = views[requested] ? requested : 'dashboard'; app.innerHTML = views[route](); document.querySelector('#pageCrumb').textContent = pageNames[route]; document.querySelectorAll('[data-route]').forEach((item) => item.classList.toggle('active', item.dataset.route === route)); sidebar.classList.remove('open'); bind(route); }
+  function render() { const requested = location.hash.slice(1) || 'dashboard'; const route = views[requested] ? requested : 'dashboard'; app.innerHTML = views[route](); document.querySelector('#pageCrumb').textContent = pageNames[route]; document.querySelectorAll('[data-route]').forEach((item) => item.classList.toggle('active', item.dataset.route === route)); sidebar.classList.remove('open'); bind(route); updateNotificationCount(); }
   function bind(route) {
     app.querySelectorAll('[data-go]').forEach((el) => el.addEventListener('click', () => location.hash = el.dataset.go));
     app.querySelectorAll('[data-week-id]').forEach((el) => el.addEventListener('click', () => showWeek(el.dataset.weekId)));
@@ -80,11 +84,13 @@
   function showWeek(id) { const item = curriculum.find((entry) => entry.id === id); openModal(`<span class="eyebrow">WEEK ${String(item.week_number).padStart(2,'0')} / ${item.level}</span><h2 id="modalTitle">${esc(item.title)}</h2><p class="modal-desc">${esc(item.description)}</p><div class="notice-item hot"><strong>이번 주 학습 목표</strong><p>${(item.tags || []).map(esc).join(', ')}의 원리를 이해하고 허가된 실습 환경에서 재현합니다.</p><small>ESTIMATED · ${item.duration_minutes}분</small></div><div class="modal-actions"><button class="primary-btn" data-close>확인</button></div>`); document.querySelector('[data-close]').addEventListener('click', closeModal); }
   function submissionModal(id) { const item = assignments.find((entry) => entry.id === id); openModal(`<span class="eyebrow">SECURE SUBMISSION</span><h2 id="modalTitle">${esc(item.title)}</h2><p class="modal-desc">${esc(item.description)}<br>마감 ${date(item.due_at)}</p><form id="submissionForm"><div class="field"><label>제출 파일</label><div class="file-drop"><input name="file" type="file" required accept=".pdf,.md,.txt,.zip" /><p class="modal-desc">PDF, MD, TXT, ZIP · 최대 20MB</p></div></div><div class="field"><label>메모</label><textarea name="memo" placeholder="검사할 때 참고할 내용을 적어주세요."></textarea></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close>취소</button><button class="primary-btn">제출 완료</button></div></form>`); document.querySelector('[data-close]').addEventListener('click', closeModal); document.querySelector('#submissionForm').addEventListener('submit', async (event) => { event.preventDefault(); const fd = new FormData(event.target); const button = event.target.querySelector('.primary-btn'); button.disabled = true; button.textContent = '업로드 중...'; try { await backend.submitAssignment({ assignmentId: id, userId: auth.user.id, file: fd.get('file'), memo: fd.get('memo').trim() }); submissions = await backend.listMySubmissions(auth.user.id); closeModal(); render(); toast('과제가 안전하게 제출되었습니다.'); } catch (error) { toast(error.message, true); button.disabled = false; button.textContent = '제출 완료'; } }); }
   function feedbackModal(id) { const submission = submissions.find((item) => item.id === id); const review = submission.reviews?.[0]; openModal(`<span class="eyebrow">INSTRUCTOR FEEDBACK</span><h2 id="modalTitle">${review?.score ?? '-'}점</h2><p class="modal-desc">${esc(review?.feedback || '등록된 피드백이 없습니다.')}</p><div class="modal-actions"><button class="primary-btn" data-close>확인</button></div>`); document.querySelector('[data-close]').addEventListener('click', closeModal); }
+  function notificationModal() { const pending = pendingAssignments(); openModal(`<span class="eyebrow">NOTIFICATION CENTER</span><h2 id="modalTitle">알림</h2><p class="modal-desc">공개된 과제와 중요한 운영 안내를 확인하세요.</p><div class="notice-list">${pending.map((item) => `<div class="notice-item hot"><strong>${esc(item.code)} ${esc(item.title)}</strong><p>아직 제출하지 않은 과제입니다.</p><small>DEADLINE · ${date(item.due_at)}</small></div>`).join('') || '<div class="notice-item"><strong>새 과제 알림이 없습니다.</strong><p>현재 공개된 과제를 모두 제출했습니다.</p><small>STATUS · ALL CLEAR</small></div>'}<div class="notice-item"><strong>허가된 환경에서만 실습하세요.</strong><p>Dreamhack Lab 또는 동아리가 명시적으로 허가한 격리 환경만 사용합니다.</p><small>SECURITY POLICY · ALWAYS ACTIVE</small></div></div><div class="modal-actions"><button class="primary-btn" data-close>확인</button></div>`); document.querySelector('[data-close]').addEventListener('click', closeModal); }
   async function openResource(id) { const item = resources.find((entry) => entry.id === id); try { if (item.external_url) return window.open(item.external_url, '_blank', 'noopener'); const url = await backend.createSignedUrl('resources', item.file_path); window.open(url, '_blank', 'noopener'); } catch (error) { toast(error.message, true); } }
 
   window.addEventListener('hashchange', render);
   document.querySelector('#menuButton').addEventListener('click', () => sidebar.classList.toggle('open'));
   document.querySelector('#signOutButton').addEventListener('click', () => backend.signOut());
+  notificationButton.addEventListener('click', notificationModal);
   document.querySelector('#modalClose').addEventListener('click', closeModal);
   modal.addEventListener('click', (event) => event.target === modal && closeModal());
   document.addEventListener('keydown', (event) => event.key === 'Escape' && closeModal());

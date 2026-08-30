@@ -28,7 +28,16 @@
         <header class="topbar">
           <button class="menu-button" id="menuButton" aria-label="메뉴 열기">☰</button>
           <div class="breadcrumb"><span>FLAGSHIP</span><i>/</i><strong id="pageCrumb">DASHBOARD</strong></div>
-          <div class="top-actions"><a class="icon-button admin-shortcut" id="adminShortcut" href="admin.html" title="관리자 패널" hidden>⚙</a><button class="notification" aria-label="알림"><span>3</span>♢</button><div class="live-pill"><i></i> 2026 WEB HACKING</div></div>
+          <div class="top-actions">
+            <a class="icon-button admin-shortcut" id="adminShortcut" href="admin.html" aria-label="관리자 패널" title="관리자 패널" hidden>
+              <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21H9.6v-.09A1.7 1.7 0 0 0 8.5 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3V9.6h.09A1.7 1.7 0 0 0 4.6 8.5a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.5 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.2.38.52.7.9.9.34.18.72.28 1.1.3h.1v4h-.09A1.7 1.7 0 0 0 19.4 15Z"></path></svg>
+            </a>
+            <button class="notification" id="notificationButton" type="button" aria-label="알림 보기" aria-haspopup="dialog" title="알림 보기">
+              <span id="notificationCount" hidden>0</span>
+              <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            </button>
+            <div class="live-pill"><i></i> 2026 WEB HACKING</div>
+          </div>
         </header>
         <section id="app" class="content" aria-live="polite"><div class="empty">학습 공간을 불러오는 중입니다…</div></section>
       </main>

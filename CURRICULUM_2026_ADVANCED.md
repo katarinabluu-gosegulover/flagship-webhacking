@@ -1,19 +1,21 @@
 # 2026 Web Hacking Advanced 운영 커리큘럼
 
-기준 과정: Dreamhack `Web Hacking Basics - Deep Dive` 8개 Unit
+기준 과정: Dreamhack `Web Hacking Advanced` 6개 Unit
 
-원본 과정: https://dreamhack.io/lecture/paths/web-hacking-basics-deep-dive
+원본 과정: https://dreamhack.io/lecture/paths/web-hacking-advanced
+
+Path 구성은 약 14시간 30분, 강의 13개, Lab 2개, 문제 8개, 퀴즈 6개입니다. 분량이 큰 RPO와 Web Cache Unit은 운영상 두 주로 나누어 총 8주로 편성합니다.
 
 | 주차 | 수업일 | 학습 Unit | 과제 마감 |
 |---:|---|---|---|
-| 1 | 2026-08-31 | XSS Filtering Bypass | 2026-09-06 23:59 KST |
-| 2 | 2026-09-07 | Content Security Policy (CSP) | 2026-09-13 23:59 KST |
-| 3 | 2026-09-14 | CSRF/CORS Bypass | 2026-09-20 23:59 KST |
-| 4 | 2026-09-21 | Command Injection Advanced | 2026-09-27 23:59 KST |
-| 5 | 2026-09-28 | File Vulnerability Advanced | 2026-10-04 23:59 KST |
-| 6 | 2026-10-05 | SQL Injection Advanced | 2026-10-11 23:59 KST |
-| 7 | 2026-10-12 | SQL Injection Fingerprinting | 2026-10-18 23:59 KST |
-| 8 | 2026-10-19 | NoSQL Injection Advanced | 2026-10-25 23:59 KST |
+| 1 | 2026-08-31 | Client-Side Template Injection (CSTI) | 2026-09-06 23:59 KST |
+| 2 | 2026-09-07 | XS-Search | 2026-09-13 23:59 KST |
+| 3 | 2026-09-14 | CSS Injection | 2026-09-20 23:59 KST |
+| 4 | 2026-09-21 | DOM Vulnerability | 2026-09-27 23:59 KST |
+| 5 | 2026-09-28 | Relative Path Overwrite (RPO) | 2026-10-04 23:59 KST |
+| 6 | 2026-10-05 | RPO Advanced Practice | 2026-10-11 23:59 KST |
+| 7 | 2026-10-12 | Web Cache Poisoning | 2026-10-18 23:59 KST |
+| 8 | 2026-10-19 | Web Cache Deception | 2026-10-25 23:59 KST |
 
 ## 운영 원칙
 
