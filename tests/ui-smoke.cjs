@@ -44,6 +44,7 @@ const fs = require('fs');
   const adminScript = fs.readFileSync(path.join(process.cwd(), 'admin.js'), 'utf8');
   const notificationScript = fs.readFileSync(path.join(process.cwd(), 'notification-state.js'), 'utf8');
   const reviewScript = fs.readFileSync(path.join(process.cwd(), 'review-model.js'), 'utf8');
+  const submissionScript = fs.readFileSync(path.join(process.cwd(), 'submission-model.js'), 'utf8');
   const studentStyles = fs.readFileSync(path.join(process.cwd(), 'styles.css'), 'utf8');
   const pagesWorkflow = fs.readFileSync(path.join(process.cwd(), '.github/workflows/pages.yml'), 'utf8');
   if (!studentHtml.includes('id="notificationButton"') || !studentHtml.includes('class="action-icon"')) {
@@ -69,6 +70,12 @@ const fs = require('fs');
   }
   if (!adminHtml.includes('review-model.js') || !adminScript.includes('const reviewFor = window.flagshipReviews.first')) {
     throw new Error('관리자 화면의 피드백 점수 표시 모듈이 연결되지 않았습니다.');
+  }
+  if (!studentHtml.includes('submission-model.js') || !studentScript.includes('data-cancel-submission-id') || !submissionScript.includes("status === 'submitted'")) {
+    throw new Error('피드백 전 제출 취소 기능이 연결되지 않았습니다.');
+  }
+  if (!studentScript.includes('backend.cancelSubmission') || !pagesWorkflow.includes('submission-model.js')) {
+    throw new Error('제출 취소 처리 또는 GitHub Pages 배포 파일이 연결되지 않았습니다.');
   }
   if (!studentScript.includes('https://dreamhack.io/lecture/paths/web-hacking-advanced')) {
     throw new Error('지정된 Dreamhack Web Hacking Advanced Path 링크가 없습니다.');

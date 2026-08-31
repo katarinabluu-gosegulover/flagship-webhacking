@@ -153,6 +153,24 @@
     return data;
   }
 
+  async function cancelSubmission({ submissionId, userId, filePath }) {
+    const { data, error } = await requireClient()
+      .from('submissions')
+      .delete()
+      .eq('id', submissionId)
+      .eq('student_id', userId)
+      .eq('status', 'submitted')
+      .select('id')
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) throw new Error('이미 채점이 시작되었거나 취소할 수 없는 제출물입니다.');
+
+    const { error: storageError } = filePath
+      ? await requireClient().storage.from('submissions').remove([filePath])
+      : { error: null };
+    return { canceled: true, fileRemoved: !storageError };
+  }
+
   async function createSignedUrl(bucket, path, expiresIn = 300) {
     const { data, error } = await requireClient().storage.from(bucket).createSignedUrl(path, expiresIn);
     if (error) throw error;
@@ -271,6 +289,7 @@
     listResources,
     listMySubmissions,
     submitAssignment,
+    cancelSubmission,
     createSignedUrl,
     adminDashboardData,
     saveCurriculum,

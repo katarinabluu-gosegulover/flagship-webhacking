@@ -30,7 +30,7 @@ jobs:
           mkdir -p public
           cp index.html login.html admin.html public/
           cp styles.css auth.css admin.css public/
-          cp app-v2.js login.js admin.js backend.js activity-model.js notification-state.js review-model.js config.js public/
+          cp app-v2.js login.js admin.js backend.js activity-model.js notification-state.js review-model.js submission-model.js config.js public/
           touch public/.nojekyll
 
       - name: Configure Pages
