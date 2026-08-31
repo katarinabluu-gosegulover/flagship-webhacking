@@ -40,7 +40,10 @@ const fs = require('fs');
 
   const studentHtml = fs.readFileSync(path.join(process.cwd(), 'index.html'), 'utf8');
   const studentScript = fs.readFileSync(path.join(process.cwd(), 'app-v2.js'), 'utf8');
+  const adminHtml = fs.readFileSync(path.join(process.cwd(), 'admin.html'), 'utf8');
+  const adminScript = fs.readFileSync(path.join(process.cwd(), 'admin.js'), 'utf8');
   const notificationScript = fs.readFileSync(path.join(process.cwd(), 'notification-state.js'), 'utf8');
+  const reviewScript = fs.readFileSync(path.join(process.cwd(), 'review-model.js'), 'utf8');
   const studentStyles = fs.readFileSync(path.join(process.cwd(), 'styles.css'), 'utf8');
   const pagesWorkflow = fs.readFileSync(path.join(process.cwd(), '.github/workflows/pages.yml'), 'utf8');
   if (!studentHtml.includes('id="notificationButton"') || !studentHtml.includes('class="action-icon"')) {
@@ -57,6 +60,15 @@ const fs = require('fs');
   }
   if (!pagesWorkflow.includes('notification-state.js')) {
     throw new Error('GitHub Pages 배포 파일에 알림 읽음 처리 모듈이 포함되지 않았습니다.');
+  }
+  if (!studentHtml.includes('review-model.js') || !studentScript.includes('reviewFor(') || !reviewScript.includes('function first')) {
+    throw new Error('1:1 피드백 점수 표시 모듈이 연결되지 않았습니다.');
+  }
+  if (!pagesWorkflow.includes('review-model.js')) {
+    throw new Error('GitHub Pages 배포 파일에 피드백 점수 모듈이 포함되지 않았습니다.');
+  }
+  if (!adminHtml.includes('review-model.js') || !adminScript.includes('const reviewFor = window.flagshipReviews.first')) {
+    throw new Error('관리자 화면의 피드백 점수 표시 모듈이 연결되지 않았습니다.');
   }
   if (!studentScript.includes('https://dreamhack.io/lecture/paths/web-hacking-advanced')) {
     throw new Error('지정된 Dreamhack Web Hacking Advanced Path 링크가 없습니다.');
