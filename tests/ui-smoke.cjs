@@ -77,6 +77,12 @@ const fs = require('fs');
   if (!studentScript.includes('backend.cancelSubmission') || !pagesWorkflow.includes('submission-model.js')) {
     throw new Error('제출 취소 처리 또는 GitHub Pages 배포 파일이 연결되지 않았습니다.');
   }
+  if (!adminScript.includes('data-delete-submission') || !adminScript.includes('backend.deleteSubmission')) {
+    throw new Error('관리자 제출 삭제 기능이 연결되지 않았습니다.');
+  }
+  if (!adminScript.includes('피드백과 저장된 파일도 함께 영구 삭제') || !adminScript.includes('학생은 다시 제출할 수 있습니다')) {
+    throw new Error('관리자 제출 삭제 경고 문구가 충분하지 않습니다.');
+  }
   if (!studentScript.includes('https://dreamhack.io/lecture/paths/web-hacking-advanced')) {
     throw new Error('지정된 Dreamhack Web Hacking Advanced Path 링크가 없습니다.');
   }

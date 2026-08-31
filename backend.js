@@ -171,6 +171,24 @@
     return { canceled: true, fileRemoved: !storageError };
   }
 
+  async function deleteSubmission(submission) {
+    if (!submission?.id) throw new Error('삭제할 제출물을 찾을 수 없습니다.');
+
+    const { data, error } = await requireClient()
+      .from('submissions')
+      .delete()
+      .eq('id', submission.id)
+      .select('id')
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) throw new Error('제출물이 이미 삭제되었거나 삭제 권한이 없습니다.');
+
+    const { error: storageError } = submission.file_path
+      ? await requireClient().storage.from('submissions').remove([submission.file_path])
+      : { error: null };
+    return { deleted: true, fileRemoved: !storageError };
+  }
+
   async function createSignedUrl(bucket, path, expiresIn = 300) {
     const { data, error } = await requireClient().storage.from(bucket).createSignedUrl(path, expiresIn);
     if (error) throw error;
@@ -290,6 +308,7 @@
     listMySubmissions,
     submitAssignment,
     cancelSubmission,
+    deleteSubmission,
     createSignedUrl,
     adminDashboardData,
     saveCurriculum,
