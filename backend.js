@@ -293,6 +293,11 @@
     if (error) throw error;
   }
 
+  async function deleteMemberAccount(userId) {
+    const { error } = await requireClient().rpc('delete_member_account', { target_user_id: userId });
+    if (error) throw error;
+  }
+
   window.flagshipBackend = {
     configured,
     client,
@@ -319,5 +324,6 @@
     uploadResource,
     deleteResource,
     updateUserRole,
+    deleteMemberAccount,
   };
 })();

@@ -123,6 +123,36 @@ $$;
 revoke all on function public.is_admin() from public;
 grant execute on function public.is_admin() to authenticated;
 
+create or replace function public.delete_member_account(target_user_id uuid)
+returns void
+language plpgsql
+security definer set search_path = ''
+as $$
+begin
+  if (select auth.uid()) is null then
+    raise exception '로그인이 필요합니다.';
+  end if;
+  if not (select public.is_admin()) then
+    raise exception '관리자 권한이 필요합니다.';
+  end if;
+  if target_user_id = (select auth.uid()) then
+    raise exception '본인 계정은 삭제할 수 없습니다.';
+  end if;
+  if not exists (select 1 from public.profiles where id = target_user_id) then
+    raise exception '삭제할 멤버를 찾을 수 없습니다.';
+  end if;
+  if exists (select 1 from public.profiles where id = target_user_id and role = 'admin')
+    and (select count(*) from public.profiles where role = 'admin') <= 1 then
+    raise exception '마지막 관리자 계정은 삭제할 수 없습니다.';
+  end if;
+
+  delete from auth.users where id = target_user_id;
+end;
+$$;
+
+revoke all on function public.delete_member_account(uuid) from public;
+grant execute on function public.delete_member_account(uuid) to authenticated;
+
 alter table public.profiles enable row level security;
 alter table public.curriculum_weeks enable row level security;
 alter table public.assignments enable row level security;

@@ -133,7 +133,7 @@
 
   function members() {
     return `${head('ACCESS CONTROL', '멤버 관리', '가입한 멤버의 역할을 관리합니다. 관리자 권한은 신뢰할 수 있는 운영자에게만 부여하세요.')}
-      <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>MEMBER</th><th>USER ID</th><th>JOINED</th><th>ROLE</th></tr></thead><tbody>${data.profiles.map((item) => `<tr><td><div class="student"><span class="avatar">${esc(item.display_name[0])}</span><strong>${esc(item.display_name)}</strong></div></td><td><code>${esc(item.id.slice(0, 8))}…</code></td><td>${date(item.created_at)}</td><td><select class="role-select" data-role-user="${item.id}" ${item.id === auth.user.id ? 'disabled title="자기 자신의 역할은 변경할 수 없습니다"' : ''}><option value="student" ${item.role === 'student' ? 'selected' : ''}>교육생</option><option value="admin" ${item.role === 'admin' ? 'selected' : ''}>관리자</option></select></td></tr>`).join('')}</tbody></table></div>`;
+      <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>MEMBER</th><th>USER ID</th><th>JOINED</th><th>ROLE</th><th>ACTION</th></tr></thead><tbody>${data.profiles.map((item) => `<tr><td><div class="student"><span class="avatar">${esc(item.display_name[0])}</span><strong>${esc(item.display_name)}</strong></div></td><td><code>${esc(item.id.slice(0, 8))}…</code></td><td>${date(item.created_at)}</td><td><select class="role-select" data-role-user="${item.id}" ${item.id === auth.user.id ? 'disabled title="자기 자신의 역할은 변경할 수 없습니다"' : ''}><option value="student" ${item.role === 'student' ? 'selected' : ''}>교육생</option><option value="admin" ${item.role === 'admin' ? 'selected' : ''}>관리자</option></select></td><td class="actions">${item.id === auth.user.id ? '<span class="muted">본인</span>' : `<button class="danger-btn" data-delete-member="${item.id}">멤버 삭제</button>`}</td></tr>`).join('')}</tbody></table></div>`;
   }
 
   const views = { overview, submissions, curriculum: curriculumView, assignments, resources, members };
@@ -162,6 +162,7 @@
     app.querySelectorAll('[data-resource-open]').forEach((el) => el.addEventListener('click', () => viewResource(el.dataset.resourceOpen)));
     app.querySelectorAll('[data-resource-delete]').forEach((el) => el.addEventListener('click', () => removeResource(el.dataset.resourceDelete)));
     app.querySelectorAll('[data-role-user]').forEach((el) => el.addEventListener('change', () => changeRole(el)));
+    app.querySelectorAll('[data-delete-member]').forEach((el) => el.addEventListener('click', () => removeMember(el.dataset.deleteMember)));
     document.querySelector('#activityStudentFilter')?.addEventListener('change', (event) => {
       activityStudent = event.target.value;
       render();
@@ -223,6 +224,7 @@
   async function removeWeek(id) { if (!confirm('이 주차를 삭제할까요? 연결된 과제는 주차 연결만 해제됩니다.')) return; try { await backend.deleteCurriculum(id); await refresh(); toast('커리큘럼 주차가 삭제되었습니다.'); } catch (error) { toast(error.message, true); } }
   async function removeResource(id) { if (!confirm('이 자료와 저장된 파일을 삭제할까요?')) return; try { const item = data.resources.find((entry) => entry.id === id); await backend.deleteResource(item); await refresh(); toast('자료가 삭제되었습니다.'); } catch (error) { toast(error.message, true); } }
   async function changeRole(select) { const previous = select.value === 'admin' ? 'student' : 'admin'; if (!confirm(`이 멤버의 역할을 ${select.value === 'admin' ? '관리자' : '교육생'}로 변경할까요?`)) { select.value = previous; return; } try { await backend.updateUserRole(select.dataset.roleUser, select.value); toast('멤버 권한이 변경되었습니다.'); } catch (error) { select.value = previous; toast(error.message, true); } }
+  async function removeMember(id) { const item = data.profiles.find((entry) => entry.id === id); if (!item) return; if (!confirm(`${item.display_name} 계정을 삭제할까요? 해당 멤버의 로그인 계정, 프로필, 제출물과 피드백이 모두 영구 삭제됩니다.`)) return; try { await backend.deleteMemberAccount(id); await refresh(); toast(`${item.display_name} 계정을 삭제했습니다.`); } catch (error) { toast(error.message, true); } }
 
   document.querySelectorAll('[data-admin-route]').forEach((button) => button.addEventListener('click', () => { location.hash = button.dataset.adminRoute; }));
   window.addEventListener('hashchange', () => { route = location.hash.slice(1) || 'overview'; render(); });
